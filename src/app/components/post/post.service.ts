@@ -26,4 +26,10 @@ export class PostService {
       )
 
   }
+
+  public getPost(id:PostI){
+
+    return this.afs.doc<any>(`posts/${id}`).valueChanges()
+    
+  }
 }

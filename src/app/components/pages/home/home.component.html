@@ -11,12 +11,19 @@
         <mat-card-content>
             <p> {{ post.contentPost }} </p>
         </mat-card-content>
-
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+            <mat-chip-list>
+                <mat-chip *ngFor=" let tag of post.tagsPost " color="primary" selected> {{ tag }}  </mat-chip>
+            </mat-chip-list>
+        </mat-card-actions>
     </mat-card>
 </div>
 
 <ng-template #loading>
-    cargando...
+    <div class="container-spinner">
+        <mat-spinner></mat-spinner>
+    </div>
 </ng-template>
 
 

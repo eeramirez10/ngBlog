@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="posts$ | async as post else loading">
     <mat-card class="post-card">
         <img matCardImage class="aling-center" [src]=" post.imagePost">
         <mat-card-content>
@@ -7,5 +7,19 @@
             </mat-card-title>
             <p> {{ post.contentPost }} </p>
         </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions align="center">
+            <a [routerLink]="['/home']">
+                <button mat-raised-button color="primary">Regresar</button>
+            </a>
+        </mat-card-actions>
+
     </mat-card>
 </div>
+
+
+<ng-template #loading>
+    <div class="container-spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

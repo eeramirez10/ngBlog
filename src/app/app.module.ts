@@ -9,6 +9,7 @@ import { PostComponent } from './components/post/post/post.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { ToolbarComponent } from './shared/components/toolbar/toolbar.component';
+import { ReactiveFormsModule } from "@angular/forms";
 
 
 /* Firebase*/
@@ -16,13 +17,17 @@ import { AngularFireModule } from "@angular/fire";
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireStorageModule, StorageBucket } from "@angular/fire/storage";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { ContainerAppComponent } from './components/pages/container-app/container-app.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NewPostComponent,
     PostComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    ContainerAppComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +37,9 @@ import { AngularFireStorageModule, StorageBucket } from "@angular/fire/storage";
     MaterialModule,
     AngularFireStorageModule,
     AngularFirestoreModule,
-    AngularFireModule.initializeApp( environment.firebaseConfig)
+    AngularFireAuthModule,
+    AngularFireModule.initializeApp( environment.firebaseConfig),
+    ReactiveFormsModule
     
   ],
   providers: [
