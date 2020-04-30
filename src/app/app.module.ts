@@ -19,6 +19,10 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireStorageModule, StorageBucket } from "@angular/fire/storage";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { ContainerAppComponent } from './components/pages/container-app/container-app.component';
+import { ModalComponent } from './shared/components/modal/modal.component';
+import { EditPostComponent } from './components/post/edit-post/edit-post.component';
+import { EditPostModule } from './components/post/edit-post/edit-post.module';
+
 
 
 @NgModule({
@@ -27,7 +31,9 @@ import { ContainerAppComponent } from './components/pages/container-app/containe
     NewPostComponent,
     PostComponent,
     ToolbarComponent,
-    ContainerAppComponent
+    ContainerAppComponent,
+    ModalComponent,
+    EditPostComponent
   ],
   imports: [
     BrowserModule,
@@ -39,9 +45,11 @@ import { ContainerAppComponent } from './components/pages/container-app/containe
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireModule.initializeApp( environment.firebaseConfig),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    EditPostModule
     
   ],
+  entryComponents: [ ModalComponent ],
   providers: [
     { provide: StorageBucket, useValue:'gs://ngblog-ba66e.appspot.com' }
    ],

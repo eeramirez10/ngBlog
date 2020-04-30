@@ -1,19 +1,28 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFirestore, AngularFirestoreCollection } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, finalize } from "rxjs/operators";
 import { PostI } from "../../../shared/models/post.interface";
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
 
-  constructor(private afs:AngularFirestore){ }
+  private postsCollection: AngularFirestoreCollection<any>;
+  private filePath:any;
+  private downLoadURL: Observable<string>
+
+  constructor(private afs:AngularFirestore,
+    private storage:AngularFireStorage
+    ){
+    this.postsCollection = this.afs.collection('posts');
+  }
 
   public getAllPost():Observable<PostI[]>{
 
-    return this.afs.collection('posts')
+    return this.postsCollection
       .snapshotChanges()
       .pipe(
         map( actions => 
@@ -29,7 +38,55 @@ export class PostService {
 
   public getPost(id:PostI){
 
-    return this.afs.doc<any>(`posts/${id}`).valueChanges()
+    return this.postsCollection.doc<any>(`${id}`).valueChanges()
     
+  }
+  
+
+
+  public deletePost(id){
+    return this.postsCollection.doc<any>(`${id}`).delete()
+  }
+
+  public editPostById(post){
+    return this.postsCollection.doc<any>(post.id).update(post)
+  }
+
+  public preAddAndUpdatePost(post, image){
+    this.uploadImage(post,image)
+  }
+
+  private savePost(post){
+
+    const { titlePost, contentPost, tagsPost  } = post;
+
+    const postObj = {
+      titlePost,
+      contentPost,
+      imagePost: this.downLoadURL,
+      fileRef: this.filePath,
+      tagsPost
+    }
+
+    // TODO_editPost
+    this.postsCollection.add(postObj)
+  }
+
+  private uploadImage(post, image){
+    
+    this.filePath = `images/${image.name}`;
+    const fileRef = this.storage.ref(this.filePath);
+    const task = this.storage.upload( this.filePath , image );
+
+    task.snapshotChanges()
+     .pipe(
+       finalize(()=>{
+         fileRef.getDownloadURL().subscribe( urlImage => {
+           this.downLoadURL = urlImage
+            this.savePost(post);
+         })
+       })
+     ).subscribe()
+
   }
 }
